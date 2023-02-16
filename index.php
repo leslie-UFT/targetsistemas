@@ -46,8 +46,14 @@
 
     function holiday(int $year){
         echo "<br>• Buscando feriados no ano: $year<br>";
-        $resp = json_decode(file_get_contents("https://api.invertexto.com/v1/holidays/$year?token=2670|WzasOe3QcuQdzO05loj5NGmFktYmopE0&state=TO"));
+        echo "<br>• OBS: Para funcionar essa busca é necessario TOKEN, da API https://api.invertexto.com/<br>";
+
+        $resp = json_decode(file_get_contents("https://api.invertexto.com/v1/holidays/$year?token=2676|PSP7FqWXmEybG2uU84w4LKK0F4h80FRH&state=TO"));
         $feriado = array();
+
+        if(!$resp){
+            $resp = json_decode('[{"date":"2023-01-01","name":"Confraterniza\u00e7\u00e3o Universal","type":"feriado","level":"nacional"},{"date":"2023-02-20","name":"Carnaval","type":"facultativo","level":"nacional"},{"date":"2023-02-21","name":"Carnaval","type":"facultativo","level":"nacional"},{"date":"2023-02-22","name":"Quarta-feira de Cinzas","type":"facultativo","level":"nacional"},{"date":"2023-03-18","name":"Autonomia do Estado","type":"feriado","level":"estadual","law":"Lei estadual n\u00ba 960\/1998"},{"date":"2023-04-07","name":"Sexta-feira Santa","type":"facultativo","level":"nacional"},{"date":"2023-04-21","name":"Tiradentes","type":"feriado","level":"nacional"},{"date":"2023-05-01","name":"Dia do Trabalhador","type":"feriado","level":"nacional"},{"date":"2023-06-08","name":"Corpus Christi","type":"facultativo","level":"nacional"},{"date":"2023-09-07","name":"Independ\u00eancia do Brasil","type":"feriado","level":"nacional"},{"date":"2023-09-08","name":"Padroeira do Estado","type":"feriado","level":"estadual","law":"Lei estadual n\u00ba 627\/1993"},{"date":"2023-10-05","name":"Cria\u00e7\u00e3o do estado","type":"feriado","level":"estadual","law":"Lei estadual n\u00ba 98\/1989"},{"date":"2023-10-12","name":"Nossa Senhora Aparecida","type":"feriado","level":"nacional"},{"date":"2023-10-28","name":"Dia do Servidor P\u00fablico","type":"facultativo","level":"nacional"},{"date":"2023-11-02","name":"Finados","type":"feriado","level":"nacional"},{"date":"2023-11-15","name":"Proclama\u00e7\u00e3o da Rep\u00fablica","type":"feriado","level":"nacional"},{"date":"2023-12-24","name":"V\u00e9spera de Natal","type":"facultativo","level":"nacional"},{"date":"2023-12-25","name":"Natal","type":"feriado","level":"nacional"},{"date":"2023-12-31","name":"V\u00e9spera de Ano-Novo","type":"facultativo","level":"nacional"}]');
+        }
 
         foreach($resp as $k){
             $feriado[$year][substr($k->date,5,2)][substr($k->date,8,2)] = $k;
@@ -59,6 +65,7 @@
         echo "<br>• Gerando calendário mensal de ".$GLOBALS['month'][(int)$month]."/$year<br>";
         $announcing = array();
         $holiday = holiday($year);
+        
         $month = str_pad($month, 2, '0', STR_PAD_LEFT);
 
         for($i=1;$i <= cal_days_in_month(CAL_GREGORIAN, $month, $year);$i++){
@@ -71,11 +78,11 @@
             else{
                 $announcing["$year"]["$month"]["$day"] = array('date'=> "$day/$month/$year",'week'=> date('w',strtotime("$day-$month-$year")));
             }
-
-            if($day == 20)
-            $announcing["2023"]["02"]["20"]["holidays"] = (object) ['name' => 'Carnaval'];
-
         }
+
+        echo "<pre>";
+        print_r($announcing);
+        echo "</pre>";
 
         return $announcing;
     }
@@ -192,7 +199,7 @@
     echo "5) Escreva um programa que inverta os caracteres de um string<br>";
     echo "**********************************************************************************************************************************************************************<br>";
 
-    echo $phrase  = "FRASE: ".mb_convert_encoding("A marca da cultura de consumo é a redução do SER para TER.","UTF-8");
+    echo $phrase  = "A marca da cultura de consumo é a redução do SER para TER.";
  
     $p = preg_split('//u', $phrase);
 
@@ -201,4 +208,3 @@
     }
 
     echo "<br>FRASE: ".implode($phrase_new);
-
